@@ -6,7 +6,7 @@ const initialState = [
     lastName: 'Hoang',
     gender: 'male',
     level: 4,
-    checkedIn: true
+    checkedIn: false
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ const initialState = [
     lastName: 'Dong',
     gender: 'male',
     level: 1,
-    checkedIn: true
+    checkedIn: false
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ const initialState = [
     lastName: 'Fang',
     gender: 'male',
     level: 5,
-    checkedIn: true
+    checkedIn: false
   },
   {
     id: 4,
@@ -62,6 +62,13 @@ const usersReducer = (state = initialState, action) => {
         } else {
           return u;
         }
+      });
+    case 'END_SESSION':
+      return state.map(u => {
+        return {
+          ...u,
+          checkedIn: false
+        };
       });
     default:
       return state;

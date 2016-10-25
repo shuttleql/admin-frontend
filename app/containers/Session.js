@@ -7,6 +7,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
+import {Tabs, Tab} from 'material-ui/Tabs';
 
 const paperStyle = {
   margin: 20
@@ -30,28 +31,39 @@ class Session extends Component {
 
   render() {
     return (
-      <div style={{ padding: 20}}>
-        <div style={{ display: 'block'}}>
-          { this.props.session.started ? <RaisedButton
-            label="Begin matchmaking"
-            style={{ marginRight: 10 }}
-            primary={true}
-            onTouchTap={this.props.beginMatchmaking}
-          /> : null }
-          { this.props.session.started ? <RaisedButton
-            label="End Session"
-            secondary={true}
-            onTouchTap={this.props.endSession}
-          /> : null }
-          { !this.props.session.started ? <RaisedButton
-            label="Begin Session"
-            primary={true}
-            keyboardFocused={true}
-            onTouchTap={this.props.startSession}
-          /> : null }
-        </div>
-        { this.props.session.started ? this.renderCheckedInUsers() : null }
-      </div>
+      <Tabs>
+        <Tab label="Setup">
+          <div style={{ padding: 20}}>
+            <div style={{ display: 'block'}}>
+              { this.props.session.started ? <RaisedButton
+                label="Begin matchmaking"
+                style={{ marginRight: 10 }}
+                primary={true}
+                onTouchTap={this.props.beginMatchmaking}
+              /> : null }
+              { this.props.session.started ? <RaisedButton
+                label="End Session"
+                secondary={true}
+                onTouchTap={this.props.endSession}
+              /> : null }
+              { !this.props.session.started ? <RaisedButton
+                label="Begin Session"
+                primary={true}
+                keyboardFocused={true}
+                onTouchTap={this.props.startSession}
+              /> : null }
+            </div>
+            { this.props.session.started ? this.renderCheckedInUsers() : null }
+          </div>
+        </Tab>
+        <Tab label="Matches">
+          <div style={{ padding: 20}}>
+            <p>
+              Matchmaking has not been started yet.
+            </p>
+          </div>
+        </Tab>
+      </Tabs>
     );
   }
 
