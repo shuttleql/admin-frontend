@@ -1,9 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import RaisedButton from 'material-ui/RaisedButton';
+import AutoComplete from 'material-ui/AutoComplete';
+import Avatar from 'material-ui/Avatar';
+import Chip from 'material-ui/Chip';
+import SvgIconFace from 'material-ui/svg-icons/action/face';
 
 const paperStyle = {
   margin: 20
+};
+
+const chipStyle = {
+  margin: 4
+};
+
+const chipsContainer = {
+  display: 'flex',
+  flexWrap: 'wrap'
 };
 
 class Session extends Component {
@@ -13,26 +28,115 @@ class Session extends Component {
     this.state = {};
   }
 
-  render () {
+  render() {
     return (
-      <div>
-        <Paper zDepth={3} style={paperStyle}>
-          Session
-        </Paper>
+      <div style={{ padding: 20}}>
+        <div style={{ display: 'block'}}>
+          { this.props.session.started ? <RaisedButton
+            label="Begin matchmaking"
+            style={{ marginRight: 10 }}
+            primary={true}
+            onTouchTap={this.props.beginMatchmaking}
+          /> : null }
+          { this.props.session.started ? <RaisedButton
+            label="End Session"
+            secondary={true}
+            onTouchTap={this.props.endSession}
+          /> : null }
+          { !this.props.session.started ? <RaisedButton
+            label="Begin Session"
+            primary={true}
+            keyboardFocused={true}
+            onTouchTap={this.props.startSession}
+          /> : null }
+        </div>
+        { this.props.session.started ? this.renderCheckedInUsers() : null }
       </div>
     );
+  }
+
+  renderCheckedInUsers() {
+    return (
+      <Card style={{ marginTop: 20 }}>
+        <CardTitle title="Checked In Members" subtitle="This is where you can check in and check out players for the current session." />
+        <CardText>
+          <AutoComplete
+            ref="autocomplete"
+            floatingLabelText="Start typing a member's name..."
+            filter={AutoComplete.caseInsensitiveFilter}
+            dataSource={this.props.checkedOutUsers}
+            dataSourceConfig={{
+              text: 'prettyText',
+              value: 'id'
+            }}
+            onNewRequest={this.checkinUser}
+            style={{ display: 'block' }}
+          />
+          <div style={chipsContainer}>
+            {
+              this.props.checkedInUsers.map(u => (
+                <Chip
+                  key={u.id}
+                  onRequestDelete={() => { this.props.checkoutUser(u.id) }}
+                  style={chipStyle}
+                >
+                  <Avatar icon={<SvgIconFace />} />
+                  {`${u.firstName} ${u.lastName}, ${u.level}`}
+                </Chip>
+              ))
+            }
+          </div>
+        </CardText>
+      </Card>
+    );
+  }
+
+  checkinUser = (user) => {
+    this.props.checkinUser(user);
+    this.refs.autocomplete.setState({
+      searchText: ''
+    });
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-
+    checkedInUsers: state.users.filter(u => u.checkedIn),
+    checkedOutUsers: state.users.filter(u => !u.checkedIn).map(u => ({
+      ...u,
+      prettyText: `${u.firstName} ${u.lastName}, ${u.level}`
+    })),
+    session: state.session
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    startSession: () => {
+      dispatch({
+        type: 'START_SESSION'
+      });
+    },
+    endSession: () => {
+      dispatch({
+        type: 'END_SESSION'
+      });
+    },
+    beginMatchmaking: () => {
+      console.log('begin that shit');
+    },
+    checkinUser: (user) => {
+      dispatch({
+        type: 'CHECK_IN_USER',
+        id: user.id
+      });
+    },
+    checkoutUser: (id) => {
+      dispatch({
+        type: 'CHECK_OUT_USER',
+        id
+      });
+    }
   };
 };
 

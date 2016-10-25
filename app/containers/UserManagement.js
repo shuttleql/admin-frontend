@@ -115,7 +115,7 @@ class Session extends Component {
       lastName: formState.lastName,
       gender: formState.gender,
       level: parseInt(formState.level),
-      checkedIn: true
+      checkedIn: false
     };
 
     this.props.register(user);
