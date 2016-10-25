@@ -25,6 +25,20 @@ class Session extends Component {
     };
   }
 
+  renderRow (user) {
+    return (
+      <TableRow key={user.id}>
+        <TableRowColumn>{user.id}</TableRowColumn>
+        <TableRowColumn>{user.email}</TableRowColumn>
+        <TableRowColumn>{user.firstName}</TableRowColumn>
+        <TableRowColumn>{user.lastName}</TableRowColumn>
+        <TableRowColumn>{user.gender}</TableRowColumn>
+        <TableRowColumn>{user.level}</TableRowColumn>
+        <TableRowColumn>{user.checkedIn ? 'yes' : 'no'}</TableRowColumn>
+      </TableRow>
+    );
+  }
+
   render () {
     const actions = [
       <FlatButton
@@ -37,7 +51,7 @@ class Session extends Component {
         label="Submit"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={this.submitForm}
       />,
     ];
     return (
@@ -50,7 +64,7 @@ class Session extends Component {
           open={this.state.showRegisterForm}
           onRequestClose={this.handleClose}
         >
-          <UserRegistration />
+          <UserRegistration ref="form" />
         </Dialog>
 
         <RaisedButton
@@ -65,6 +79,7 @@ class Session extends Component {
             <TableHeader>
               <TableRow>
                 <TableHeaderColumn>ID</TableHeaderColumn>
+                <TableHeaderColumn>Email</TableHeaderColumn>
                 <TableHeaderColumn>First Name</TableHeaderColumn>
                 <TableHeaderColumn>Last Name</TableHeaderColumn>
                 <TableHeaderColumn>Gender</TableHeaderColumn>
@@ -73,38 +88,9 @@ class Session extends Component {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableRowColumn>1</TableRowColumn>
-                <TableRowColumn>John</TableRowColumn>
-                <TableRowColumn>Smith</TableRowColumn>
-                <TableRowColumn>Male</TableRowColumn>
-                <TableRowColumn>3</TableRowColumn>
-                <TableRowColumn>yes</TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn>2</TableRowColumn>
-                <TableRowColumn>Randal</TableRowColumn>
-                <TableRowColumn>White</TableRowColumn>
-                <TableRowColumn>Female</TableRowColumn>
-                <TableRowColumn>2</TableRowColumn>
-                <TableRowColumn>yes</TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn>3</TableRowColumn>
-                <TableRowColumn>Stephanie</TableRowColumn>
-                <TableRowColumn>Sanders</TableRowColumn>
-                <TableRowColumn>Female</TableRowColumn>
-                <TableRowColumn>4</TableRowColumn>
-                <TableRowColumn>yes</TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn>4</TableRowColumn>
-                <TableRowColumn>Steve</TableRowColumn>
-                <TableRowColumn>Brown</TableRowColumn>
-                <TableRowColumn>Male</TableRowColumn>
-                <TableRowColumn>5</TableRowColumn>
-                <TableRowColumn>no</TableRowColumn>
-              </TableRow>
+              {
+                this.props.users.map(user => this.renderRow(user))
+              }
             </TableBody>
           </Table>
         </Paper>
@@ -119,17 +105,40 @@ class Session extends Component {
   handleClose = () => {
     this.setState({showRegisterForm: false});
   };
+
+  submitForm = () => {
+    const formState = this.refs.form.state;
+    const user = {
+      id: this.props.users.length + 1,
+      email: formState.email,
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      gender: formState.gender,
+      level: parseInt(formState.level),
+      checkedIn: true
+    };
+
+    this.props.register(user);
+    this.refs.form.resetState();
+
+    this.handleClose();
+  }
 }
 
 const mapStateToProps = (state) => {
   return {
-
+    users: state.users
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    register: (user) => {
+      dispatch({
+        type: 'REGISTER_USER',
+        user
+      });
+    }
   };
 };
 

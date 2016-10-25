@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react';
-import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import SelectField from 'material-ui/SelectField';
@@ -79,6 +78,18 @@ class UserRegistration extends Component {
     );
   }
 
+  resetState = () => {
+    this.setState({
+      error: false,
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+      gender: 'Male',
+      level: 1
+    });
+  }
+
   onFirstNameChange = (e) => {
     this.setState({
       firstName: e.target.value
@@ -116,19 +127,4 @@ class UserRegistration extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserRegistration);
+export default UserRegistration;
