@@ -9,6 +9,23 @@ export function filterTable(filter) {
     };
 }
 
+export function endSession() {
+  return (dispatch) => {
+    dispatch({
+      type: 'END_SESSION'
+    });
+
+    axios
+      .put(`${config.GATEWAY_URL}/admin/session/status/stop`)
+      .then((res) => {
+        dispatch({
+          type: 'SESSION_ENDED'
+        });
+      })
+      .catch((err) => { console.log(err) });
+  }
+}
+
 export function beginMatchmaking() {
   return (dispatch) => {
     dispatch({

@@ -8,7 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {beginMatchmaking as startMatchmaking} from '../actions';
+import {beginMatchmaking as startMatchmaking, endSession as finishSession} from '../actions';
 
 const paperStyle = {
   margin: 20
@@ -47,7 +47,7 @@ class Session extends Component {
                 label="Begin matchmaking"
                 style={{ marginRight: 10 }}
                 primary={true}
-                disabled={this.props.games.length}
+                disabled={!!this.props.games.length}
                 onTouchTap={this.props.beginMatchmaking}
               /> : null }
               { this.props.session.started ? <RaisedButton
@@ -182,12 +182,7 @@ const mapDispatchToProps = (dispatch) => {
       });
     },
     endSession: () => {
-      dispatch({
-        type: 'END_SESSION'
-      });
-    },
-    beginMatchmaking: () => {
-      console.log('begin that shit');
+      dispatch(finishSession());
     },
     checkinUser: (user) => {
       dispatch({
