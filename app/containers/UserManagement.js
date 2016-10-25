@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import UserRegistration from '../components/UserRegistration';
+import { registerUser } from '../actions';
 
 const buttonStyle = {
   marginTop: 20,
@@ -110,12 +111,12 @@ class Session extends Component {
     const formState = this.refs.form.state;
     const user = {
       id: this.props.users.length + 1,
+      password: formState.password,
       email: formState.email,
       firstName: formState.firstName,
       lastName: formState.lastName,
       gender: formState.gender,
-      level: parseInt(formState.level),
-      checkedIn: false
+      level: parseInt(formState.level)
     };
 
     this.props.register(user);
@@ -134,10 +135,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     register: (user) => {
-      dispatch({
-        type: 'REGISTER_USER',
-        user
-      });
+      dispatch(registerUser(user));
     }
   };
 };

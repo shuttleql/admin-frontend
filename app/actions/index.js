@@ -26,6 +26,27 @@ export function endSession() {
   }
 }
 
+export function registerUser(user) {
+  return (dispatch) => {
+    dispatch({
+      type: 'REGISTER_USER'
+    });
+
+    axios
+      .post(`${config.GATEWAY_URL}/admin/user/register`, user)
+      .then((res) => {
+        dispatch({
+          type: 'USER_REGISTERED',
+          user: res.data
+        });
+      })
+      .catch((err) => {
+        console.log('here wtf');
+        console.log(err);
+      });
+  }
+}
+
 export function beginMatchmaking() {
   return (dispatch) => {
     dispatch({

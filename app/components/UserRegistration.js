@@ -62,6 +62,7 @@ class UserRegistration extends Component {
         />
         <TextField
           style={inputStyle}
+          type="password"
           floatingLabelText="Password"
           hintText="e.g. shuttleqlisthebest123"
           value={this.state.password}

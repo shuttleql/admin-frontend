@@ -39,8 +39,11 @@ const initialState = [
 
 const usersReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'REGISTER_USER':
-      return state.concat(action.user);
+    case 'USER_REGISTERED':
+      return state.concat({
+        ...action.user,
+        checkedIn: false
+      });
     case 'CHECK_IN_USER':
       return state.map(u => {
         if (u.id === action.id) {
