@@ -33,6 +33,7 @@ class Dashboard extends Component {
           iconClassNameRight="muidocs-icon-navigation-expand-more"
           onLeftIconButtonTouchTap={this.onOpenMenu}
         />
+        {this.props.children}
       </div>
     );
   }
@@ -45,6 +46,7 @@ class Dashboard extends Component {
 };
 
 Dashboard.propTypes = {
+  children: PropTypes.object
 };
 
 const mapStateToProps = (state) => {

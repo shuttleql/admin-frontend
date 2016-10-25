@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 import App from './components/App';
-import FilterableTable from './containers/FilterableTable';
 import Login from './containers/Login';
 import Dashboard from './containers/Dashboard';
-import About from './components/About';
+import Session from './containers/Session';
+import UserManagement from './containers/UserManagement';
 import auth from './auth';
 
 function requireAuth(nextState, replace) {
@@ -18,8 +18,12 @@ function requireAuth(nextState, replace) {
 
 export default (
 	<Route path="/" component={App}>
-		<IndexRedirect to="/dashboard" />
-		<Route path="/login" component={Login} />
-		<Route path="/dashboard" component={Dashboard} onEnter={requireAuth} />
+		<IndexRedirect to="dashboard" />
+		<Route path="login" component={Login} />
+		<Route path="dashboard" component={Dashboard} onEnter={requireAuth}>
+      <IndexRedirect to="session" />
+      <Route path="session" component={Session} onEnter={requireAuth} />
+      <Route path="user" component={UserManagement} onEnter={requireAuth} />
+    </Route>
 	</Route>
 );
