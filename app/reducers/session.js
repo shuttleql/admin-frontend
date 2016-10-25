@@ -1,7 +1,6 @@
 const initialState = {
   started: false,
-  startTime: null,
-  checkedInUsers: []
+  startTime: null
 };
 
 const sessionReducer = (state = initialState, action) => {

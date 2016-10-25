@@ -8,6 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import {beginMatchmaking as startMatchmaking} from '../actions';
 
 const paperStyle = {
   margin: 20
@@ -20,6 +21,13 @@ const chipStyle = {
 const chipsContainer = {
   display: 'flex',
   flexWrap: 'wrap'
+};
+
+const cardStyle = {
+  margin: 10,
+  width: 300,
+  height: 270,
+  display: 'inline-block'
 };
 
 class Session extends Component {
@@ -39,6 +47,7 @@ class Session extends Component {
                 label="Begin matchmaking"
                 style={{ marginRight: 10 }}
                 primary={true}
+                disabled={this.props.games.length}
                 onTouchTap={this.props.beginMatchmaking}
               /> : null }
               { this.props.session.started ? <RaisedButton
@@ -58,9 +67,51 @@ class Session extends Component {
         </Tab>
         <Tab label="Matches">
           <div style={{ padding: 20}}>
-            <p>
-              Matchmaking has not been started yet.
-            </p>
+            {
+              this.props.games.length ? (
+                this.props.games.map(game => (
+                  game.team1.length === 1 ? (
+                    <Card key={game.courtId} style={cardStyle}>
+                      <CardTitle title={game.courtName} subtitle={'Singles'} />
+                      <CardText>
+                        {game.team1[0].name}
+                        <br/>
+                        <br/>
+                      </CardText>
+                      <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
+                        vs
+                      </CardText>
+                      <CardText>
+                        {game.team2[0].name}
+                        <br/>
+                        <br/>
+                      </CardText>
+                    </Card>
+                  ) : (
+                    <Card key={game.courtId} style={cardStyle}>
+                      <CardTitle title={game.courtName} subtitle={'Doubles'} />
+                      <CardText>
+                        {game.team1[0].name}
+                        <br/>
+                        {game.team1[1].name}
+                      </CardText>
+                      <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
+                        vs
+                      </CardText>
+                      <CardText>
+                        {game.team2[0].name}
+                        <br/>
+                        {game.team2[1].name}
+                      </CardText>
+                    </Card>
+                  )
+                ))
+              ) : (
+                <p>
+                  Matchmaking has not been started yet.
+                </p>
+              )
+            }
           </div>
         </Tab>
       </Tabs>
@@ -118,7 +169,8 @@ const mapStateToProps = (state) => {
       ...u,
       prettyText: `${u.firstName} ${u.lastName}, ${u.level}`
     })),
-    session: state.session
+    session: state.session,
+    games: state.games
   };
 };
 
@@ -148,6 +200,9 @@ const mapDispatchToProps = (dispatch) => {
         type: 'CHECK_OUT_USER',
         id
       });
+    },
+    beginMatchmaking: () => {
+      dispatch(startMatchmaking());
     }
   };
 };
