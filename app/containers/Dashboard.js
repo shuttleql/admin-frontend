@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import {List, ListItem} from 'material-ui/List';
 import Drawer from 'material-ui/Drawer';
@@ -24,8 +25,8 @@ class Dashboard extends Component {
           onRequestChange={(open) => this.setState({open})}
         >
           <List>
-            <ListItem primaryText="Session" leftIcon={<Schedule />} />
-            <ListItem primaryText="User Management" leftIcon={<People />} />
+            <ListItem primaryText="Session" leftIcon={<Schedule />} onClick={this.onClickMenuItem.bind(this, '/dashboard/session')} />
+            <ListItem primaryText="User Management" leftIcon={<People />} onClick={this.onClickMenuItem.bind(this, '/dashboard/user')} />
           </List>
         </Drawer>
         <AppBar
@@ -41,6 +42,14 @@ class Dashboard extends Component {
   onOpenMenu = (e) => {
     this.setState({
       open: true
+    });
+  }
+
+  onClickMenuItem = (url) => {
+    browserHistory.push(url);
+    
+    this.setState({
+      open: false
     });
   }
 };
