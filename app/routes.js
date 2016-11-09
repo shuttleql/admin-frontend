@@ -5,10 +5,10 @@ import Login from './containers/Login';
 import Dashboard from './containers/Dashboard';
 import Session from './containers/Session';
 import UserManagement from './containers/UserManagement';
-import token from './token'
+import tokenManager from './tokenManager'
 
 function requireAuth(nextState, replace) {
-  if (!token.getToken()) {
+  if (!tokenManager.getToken()) {
     replace({
       pathname: '/login',
       state: { nextPathname: nextState.location.pathname }

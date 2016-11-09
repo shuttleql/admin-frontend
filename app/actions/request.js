@@ -1,12 +1,15 @@
 import axios from 'axios';
-import token from '../token';
+import tokenManager from '../tokenManager';
 
 export default {
   getInstance() {
-    var instance = axios.create();
+    // Create an instance with global defaults, 
+    // otherwise instance header seems to be cached
+    var instance = axios.create(axios.defaults);
     instance.defaults.timeout = 2500;
-    if (token.getToken()) {
-      instance.defaults.headers.common['token'] = token.getToken();
+    var token = tokenManager.getToken();
+    if (token) {
+      instance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
     }
     return instance;
   }
