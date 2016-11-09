@@ -1,6 +1,6 @@
 import * as types from './types';
-import axios from 'axios';
 import config from '../config';
+import request from './request';
 
 export function filterTable(filter) {
     return {
@@ -15,7 +15,8 @@ export function endSession() {
       type: 'END_SESSION'
     });
 
-    axios
+    request
+      .getInstance()
       .put(`${config.GATEWAY_URL}/admin/session/status/stop`)
       .then((res) => {
         dispatch({
@@ -32,7 +33,8 @@ export function fetchUsers() {
       type: 'FETCH_USER'
     });
 
-    axios
+    request
+      .getInstance()
       .get(`${config.GATEWAY_URL}/shared/users`)
       .then((res) => {
         dispatch({
@@ -52,7 +54,8 @@ export function registerUser(user) {
       type: 'REGISTER_USER'
     });
 
-    axios
+    request
+      .getInstance()
       .post(`${config.GATEWAY_URL}/admin/user/register`, user)
       .then((res) => {
         dispatch({
@@ -72,7 +75,8 @@ export function beginMatchmaking() {
       type: 'BEGIN_MATCHMAKING'
     });
 
-    axios
+    request
+      .getInstance()
       .put(`${config.GATEWAY_URL}/admin/session/status/start`)
       .then((res) => {
         if (res.status === 200) {
@@ -80,7 +84,8 @@ export function beginMatchmaking() {
             type: 'FETCH_MATCH_DATA'
           });
 
-          axios
+          request
+            .getInstance()
             .get(`${config.GATEWAY_URL}/shared/game`)
             .then((res) => {
               if (res.status === 200) {
