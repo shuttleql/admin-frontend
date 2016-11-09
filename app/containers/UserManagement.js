@@ -112,6 +112,11 @@ class UserManagement extends Component {
   };
 
   submitForm = () => {
+
+    if (!this.refs.form.validate()) {
+      return;
+    }
+
     const formState = this.refs.form.state;
     const user = {
       id: this.props.users.length + 1,
