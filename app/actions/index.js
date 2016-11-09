@@ -26,6 +26,26 @@ export function endSession() {
   }
 }
 
+export function fetchUsers() {
+  return (dispatch) => {
+    dispatch({
+      type: 'FETCH_USER'
+    });
+
+    axios
+      .get(`${config.GATEWAY_URL}/shared/users`)
+      .then((res) => {
+        dispatch({
+          type: 'USERS_FETCHED',
+          users: res.data
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+}
+
 export function registerUser(user) {
   return (dispatch) => {
     dispatch({
@@ -41,7 +61,6 @@ export function registerUser(user) {
         });
       })
       .catch((err) => {
-        console.log('here wtf');
         console.log(err);
       });
   }

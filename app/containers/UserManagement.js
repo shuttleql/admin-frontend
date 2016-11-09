@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import UserRegistration from '../components/UserRegistration';
-import { registerUser } from '../actions';
+import { registerUser, fetchUsers } from '../actions';
 
 const buttonStyle = {
   marginTop: 20,
@@ -17,13 +17,17 @@ const paperStyle = {
   margin: 20
 };
 
-class Session extends Component {
+class UserManagement extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       showRegisterForm: false
     };
+  }
+
+  componentDidMount() {
+    this.props.fetchUsers();
   }
 
   renderRow (user) {
@@ -136,6 +140,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     register: (user) => {
       dispatch(registerUser(user));
+    },
+    fetchUsers: () => {
+      dispatch(fetchUsers());
     }
   };
 };
@@ -143,4 +150,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Session);
+)(UserManagement);
