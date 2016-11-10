@@ -42,6 +42,51 @@ class Session extends Component {
     this.props.fetchMatches()
   }
 
+  renderCourt(game) {
+    const titleText = `${game.type} ${game.unfilled ? '(Unfilled)' : ''}`
+
+    switch (game.type) {
+      case 'Singles':
+        return (
+          <Card key={game.courtId} style={cardStyle}>
+            <CardTitle title={game.courtName} subtitle={titleText} />
+            <CardText>
+              {game.team1.length ? game.team1[0].name : '?'}
+              <br/>
+              <br/>
+            </CardText>
+            <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
+              vs
+            </CardText>
+            <CardText>
+              {game.team2.length ? game.team2[0].name : '?'}
+              <br/>
+              <br/>
+            </CardText>
+          </Card>
+        )
+      case 'Doubles':
+        return (
+          <Card key={game.courtId} style={cardStyle}>
+            <CardTitle title={game.courtName} subtitle={titleText} />
+            <CardText>
+              {game.team1.length ? game.team1[0].name : '?'}
+              <br/>
+              {game.team1.length > 1 ? game.team1[1].name : '?'}
+            </CardText>
+            <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
+              vs
+            </CardText>
+            <CardText>
+              {game.team2.length ? game.team2[0].name : '?'}
+              <br/>
+              {game.team2.length > 1 ? game.team2[1].name : '?'}
+            </CardText>
+          </Card>
+        )
+    }
+  }
+
   render() {
     return (
       <Tabs>
@@ -76,43 +121,7 @@ class Session extends Component {
           <div style={{ padding: 20}}>
             {
               this.props.games.length ? (
-                this.props.games.map(game => (
-                  game.team1.length === 1 ? (
-                    <Card key={game.courtId} style={cardStyle}>
-                      <CardTitle title={game.courtName} subtitle={'Singles'} />
-                      <CardText>
-                        {game.team1.length ? game.team1[0].name : '?'}
-                        <br/>
-                        <br/>
-                      </CardText>
-                      <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
-                        vs
-                      </CardText>
-                      <CardText>
-                        {game.team2.length ? game.team2[0].name : '?'}
-                        <br/>
-                        <br/>
-                      </CardText>
-                    </Card>
-                  ) : (
-                    <Card key={game.courtId} style={cardStyle}>
-                      <CardTitle title={game.courtName} subtitle={'Doubles'} />
-                      <CardText>
-                        {game.team1.length ? game.team1[0].name : '?'}
-                        <br/>
-                        {game.team1.length > 1 ? game.team1[1].name : '?'}
-                      </CardText>
-                      <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
-                        vs
-                      </CardText>
-                      <CardText>
-                        {game.team1.length ? game.team2[0].name : '?'}
-                        <br/>
-                        {game.team2.length > 1 ? game.team2[1].name : '?'}
-                      </CardText>
-                    </Card>
-                  )
-                ))
+                this.props.games.map(game => this.renderCourt(game))
               ) : (
                 <p>
                   Matchmaking has not been started yet.
