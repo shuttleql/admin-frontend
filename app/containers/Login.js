@@ -10,7 +10,7 @@ const paperStyle = {
   height: 400,
   width: 400,
   margin: 'auto',
-  marginTop: 160,
+  marginTop: 100,
   textAlign: 'center',
   padding: 30
 };
