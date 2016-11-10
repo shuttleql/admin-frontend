@@ -8,7 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {beginMatchmaking as startMatchmaking, endSession as finishSession, fetchMatches} from '../actions';
+import {beginMatchmaking as startMatchmaking, endSession as finishSession, fetchMatches, fetchUsers} from '../actions';
 
 const paperStyle = {
   margin: 20
@@ -38,6 +38,7 @@ class Session extends Component {
   }
 
   componentDidMount() {
+    this.props.fetchUsers()
     this.props.fetchMatches()
   }
 
@@ -207,6 +208,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     fetchMatches: () => {
       dispatch(fetchMatches());
+    },
+    fetchUsers: () => {
+      dispatch(fetchUsers());
     }
   };
 };
