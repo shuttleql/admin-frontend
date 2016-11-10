@@ -80,7 +80,7 @@ class Session extends Component {
                     <Card key={game.courtId} style={cardStyle}>
                       <CardTitle title={game.courtName} subtitle={'Singles'} />
                       <CardText>
-                        {game.team1[0].name}
+                        {game.team1.length ? game.team1[0].name : '?'}
                         <br/>
                         <br/>
                       </CardText>
@@ -88,7 +88,7 @@ class Session extends Component {
                         vs
                       </CardText>
                       <CardText>
-                        {game.team2[0].name}
+                        {game.team2.length ? game.team2[0].name : '?'}
                         <br/>
                         <br/>
                       </CardText>
@@ -97,17 +97,17 @@ class Session extends Component {
                     <Card key={game.courtId} style={cardStyle}>
                       <CardTitle title={game.courtName} subtitle={'Doubles'} />
                       <CardText>
-                        {game.team1[0].name}
+                        {game.team1.length ? game.team1[0].name : '?'}
                         <br/>
-                        {game.team1[1].name}
+                        {game.team1.length > 1 ? game.team1[1].name : '?'}
                       </CardText>
                       <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
                         vs
                       </CardText>
                       <CardText>
-                        {game.team2[0].name}
+                        {game.team1.length ? game.team2[0].name : '?'}
                         <br/>
-                        {game.team2[1].name}
+                        {game.team2.length > 1 ? game.team2[1].name : '?'}
                       </CardText>
                     </Card>
                   )
