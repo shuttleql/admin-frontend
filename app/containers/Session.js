@@ -48,7 +48,9 @@ class Session extends Component {
                 style={{ marginRight: 10 }}
                 primary={true}
                 disabled={!!this.props.games.length}
-                onTouchTap={this.props.beginMatchmaking}
+                onTouchTap={() => {
+                  this.props.beginMatchmaking(this.props.checkedInUsers)
+                }}
               /> : null }
               { this.props.session.started ? <RaisedButton
                 label="End Session"
@@ -196,8 +198,8 @@ const mapDispatchToProps = (dispatch) => {
         id
       });
     },
-    beginMatchmaking: () => {
-      dispatch(startMatchmaking());
+    beginMatchmaking: (users) => {
+      dispatch(startMatchmaking(users));
     }
   };
 };

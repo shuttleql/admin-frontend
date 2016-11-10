@@ -69,7 +69,7 @@ export function registerUser(user) {
   }
 }
 
-export function beginMatchmaking() {
+export function beginMatchmaking(players) {
   return (dispatch) => {
     dispatch({
       type: 'BEGIN_MATCHMAKING'
@@ -77,7 +77,12 @@ export function beginMatchmaking() {
 
     request
       .getInstance()
-      .put(`${config.GATEWAY_URL}/admin/session/status/start`)
+      .put(`${config.GATEWAY_URL}/admin/session/status/start`, players.map(p => ({
+        id: p.id,
+        name: `${p.firstName} ${p.lastName}`,
+        level: p.level,
+        preference: p.preference
+      })))
       .then((res) => {
         if (res.status === 200) {
           dispatch({
@@ -91,7 +96,8 @@ export function beginMatchmaking() {
               if (res.status === 200) {
                 dispatch({
                   type: 'RECEIVE_MATCH_DATA',
-                  games: res.data
+                  games: res.data.matches,
+                  queue: res.data.queue
                 });
               }
             })
