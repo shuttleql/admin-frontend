@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import UsersReducer from './users';
 import SessionReducer from './session';
 import GamesReducer from './games';
+import QueueReducer from './queue';
 import * as types from '../actions/types';
 
 const filter = (state = '', action) => {
@@ -16,11 +17,12 @@ const filter = (state = '', action) => {
 
 
 const rootReducer = combineReducers({
-    session: SessionReducer,
-    users: UsersReducer,
-    games: GamesReducer,
-    filter,
-    routing
+  session: SessionReducer,
+  users: UsersReducer,
+  games: GamesReducer,
+  queue: QueueReducer,
+  filter,
+  routing
 });
 
 export default rootReducer;
