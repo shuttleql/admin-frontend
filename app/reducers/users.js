@@ -19,6 +19,18 @@ const usersReducer = (state = initialState, action) => {
         ...action.user,
         checkedIn: false
       });
+    case 'USER_EDITED':
+      return state.map(u => {
+        if (u.id === action.user.id) {
+          return action.user;
+        } else {
+          return u;
+        }
+      });
+    case 'USER_DELETED':
+      return state.filter(u => {
+        return u.id != action.userId;
+      });
     case 'CHECK_IN_USER':
       return state.map(u => {
         if (u.id === action.id) {
