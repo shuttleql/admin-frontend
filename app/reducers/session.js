@@ -17,6 +17,14 @@ const sessionReducer = (state = initialState, action) => {
         started: false,
         startTime: null
       };
+    case 'FETCHED_CURRENT_SESSION':
+      const session = action.session;
+
+      return {
+        ...state,
+        started: session.isActive,
+        startTime: new Date(session.createdAt)
+      }
     default:
       return state;
   }

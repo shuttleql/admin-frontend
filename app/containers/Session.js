@@ -7,6 +7,7 @@ import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {beginMatchmaking as startMatchmaking, endSession as finishSession, fetchMatches, fetchUsers} from '../actions';
+import {getCurrentSessionAsync} from '../actions/session';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
@@ -42,6 +43,7 @@ class Session extends Component {
   }
 
   componentDidMount() {
+    this.props.fetchSession()
     this.props.fetchUsers()
     this.props.fetchMatches()
   }
@@ -244,6 +246,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     fetchUsers: () => {
       dispatch(fetchUsers());
+    },
+    fetchSession: () => {
+      dispatch(getCurrentSessionAsync());
     }
   };
 };
