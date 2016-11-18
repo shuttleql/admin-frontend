@@ -74,22 +74,20 @@ class Session extends Component {
           { this.props.queue.length ? (
             <div style={{ padding: 20, width: 250, float: 'left' }}>
               <List disabled={true}>
-                { this.props.queue.length ? <Subheader>Queue</Subheader> : null }
+                <Subheader>Queue</Subheader>
                 {
-                  this.props.queue.length ? (
-                    this.props.queue.map(player => (
-                      <ListItem
-                        key={player.id}
-                        primaryText={player.name}
-                        leftAvatar={
-                          <Avatar backgroundColor={levelColors[player.level - 1]}>
-                            {player.level}
-                          </Avatar>
-                        }
-                        secondaryText={player.preference === 'Singles' ? player.preference + ' preferred' : null}
-                      />
-                    ))
-                  ) : null
+                  this.props.queue.map(player => (
+                    <ListItem
+                      key={player.id}
+                      primaryText={player.name}
+                      leftAvatar={
+                        <Avatar backgroundColor={levelColors[player.level - 1]}>
+                          {player.level}
+                        </Avatar>
+                      }
+                      secondaryText={player.preference === 'Singles' ? player.preference + ' preferred' : null}
+                    />
+                  ))
                 }
               </List>
             </div>
