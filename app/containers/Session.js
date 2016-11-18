@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Paper from 'material-ui/Paper';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
-import SvgIconFace from 'material-ui/svg-icons/action/face';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import {orange500, blue500, red500, lightGreen500, pink500 } from 'material-ui/styles/colors';
 import {beginMatchmaking as startMatchmaking, endSession as finishSession} from '../actions';
 
 const paperStyle = {
@@ -24,11 +25,13 @@ const chipsContainer = {
 };
 
 const cardStyle = {
-  margin: 10,
+  margin: 5,
   width: 300,
   height: 270,
   display: 'inline-block'
 };
+
+const levelColors = [orange500, blue500, red500, lightGreen500, pink500];
 
 class Session extends Component {
   constructor(props) {
@@ -68,53 +71,69 @@ class Session extends Component {
           </div>
         </Tab>
         <Tab label="Matches">
-          <div style={{ padding: 20}}>
-            {
-              this.props.games.length ? (
-                this.props.games.map(game => (
-                  game.team1.length === 1 ? (
-                    <Card key={game.courtId} style={cardStyle}>
-                      <CardTitle title={game.courtName} subtitle={'Singles'} />
-                      <CardText>
-                        {game.team1[0].name}
-                        <br/>
-                        <br/>
-                      </CardText>
-                      <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
-                        vs
-                      </CardText>
-                      <CardText>
-                        {game.team2[0].name}
-                        <br/>
-                        <br/>
-                      </CardText>
-                    </Card>
-                  ) : (
-                    <Card key={game.courtId} style={cardStyle}>
-                      <CardTitle title={game.courtName} subtitle={'Doubles'} />
-                      <CardText>
-                        {game.team1[0].name}
-                        <br/>
-                        {game.team1[1].name}
-                      </CardText>
-                      <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
-                        vs
-                      </CardText>
-                      <CardText>
-                        {game.team2[0].name}
-                        <br/>
-                        {game.team2[1].name}
-                      </CardText>
-                    </Card>
-                  )
-                ))
-              ) : (
-                <p>
-                  Matchmaking has not been started yet.
-                </p>
-              )
-            }
-          </div>
+          { this.props.queue.length ? (
+            <div style={{ padding: 20, width: 250, float: 'left' }}>
+              <List disabled={true}>
+                <Subheader>Queue</Subheader>
+                {
+                  this.props.queue.map(player => (
+                    <ListItem
+                      key={player.id}
+                      primaryText={player.name}
+                      leftAvatar={
+                        <Avatar backgroundColor={levelColors[player.level - 1]}>
+                          {player.level}
+                        </Avatar>
+                      }
+                      secondaryText={player.preference === 'Singles' ? player.preference + ' preferred' : null}
+                    />
+                  ))
+                }
+              </List>
+            </div>
+          ) : null }
+          { this.props.games.length ? (
+            <div style={{ padding: 20, overflow: 'hidden' }}>
+              <Subheader>Courts</Subheader>
+              {this.props.games.map(game => (
+                game.team1.length === 1 ? (
+                  <Card key={game.courtId} style={cardStyle}>
+                    <CardTitle title={game.courtName} subtitle={'Singles'} />
+                    <CardText>
+                      {game.team1[0].name}
+                      <br/>
+                      <br/>
+                    </CardText>
+                    <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
+                      vs
+                    </CardText>
+                    <CardText>
+                      {game.team2[0].name}
+                      <br/>
+                      <br/>
+                    </CardText>
+                  </Card>
+                ) : (
+                  <Card key={game.courtId} style={cardStyle}>
+                    <CardTitle title={game.courtName} subtitle={'Doubles'} />
+                    <CardText>
+                      {game.team1[0].name}
+                      <br/>
+                      {game.team1[1].name}
+                    </CardText>
+                    <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
+                      vs
+                    </CardText>
+                    <CardText>
+                      {game.team2[0].name}
+                      <br/>
+                      {game.team2[1].name}
+                    </CardText>
+                  </Card>
+                )
+              ))}
+            </div>
+          ) : (<p>Matchmaking has not started yet.</p>) }
         </Tab>
       </Tabs>
     );
@@ -172,7 +191,8 @@ const mapStateToProps = (state) => {
       prettyText: `${u.firstName} ${u.lastName}, ${u.level}`
     })),
     session: state.session,
-    games: state.games
+    games: state.games,
+    queue: state.queue
   };
 };
 
