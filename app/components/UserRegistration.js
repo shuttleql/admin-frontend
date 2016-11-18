@@ -27,12 +27,12 @@ class UserRegistration extends Component {
         password: false,
         level: false
       },
-      email: '',
+      email: props.user && props.user.email || '',
       password: '',
-      firstName: '',
-      lastName: '',
-      gender: 'Male',
-      level: 1
+      firstName: props.user && props.user.firstName || '',
+      lastName: props.user && props.user.lastName || '',
+      gender: props.user && props.user.gender || 'Male',
+      level: props.user && props.user.level || 1
     };
   }
 
