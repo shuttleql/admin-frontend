@@ -3,7 +3,10 @@ const initialState = [];
 const gameReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'RECEIVE_MATCH_DATA':
-      return action.games;
+      return {
+        games: action.games,
+        queue: action.queue
+      };
     case 'END_SESSION':
       return [];
     default:
