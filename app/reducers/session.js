@@ -5,13 +5,15 @@ const initialState = {
 
 const sessionReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'START_SESSION':
+    case 'SESSION_STARTED':
+      const startedSession = action.session;
+
       return {
         ...state,
-        started: true,
-        startTime: new Date()
+        started: startedSession.isActive,
+        startTime: new Date(startedSession.createdAt)
       };
-    case 'END_SESSION':
+    case 'SESSION_ENDED':
       return {
         ...state,
         started: false,

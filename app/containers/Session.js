@@ -7,15 +7,11 @@ import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {beginMatchmaking as startMatchmaking, endSession as finishSession, fetchMatches, fetchUsers} from '../actions';
-import {getCurrentSessionAsync} from '../actions/session';
+import {getCurrentSessionAsync, createSessionAsync, stopSessionAsync} from '../actions/session';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import {orange500, blue500, red500, lightGreen500, pink500 } from 'material-ui/styles/colors';
-
-const paperStyle = {
-  margin: 20
-};
 
 const chipStyle = {
   margin: 4
@@ -219,9 +215,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     startSession: () => {
-      dispatch({
-        type: 'START_SESSION'
-      });
+      dispatch(createSessionAsync());
     },
     endSession: () => {
       dispatch(finishSession());

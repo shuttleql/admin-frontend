@@ -3,9 +3,19 @@ import request from './request';
 
 export function createSessionAsync() {
   return (dispatch) => {
+    dispatch({
+      type: 'START_SESSION'
+    });
+
     return request
       .getInstance()
       .post(`${config.GATEWAY_URL}/admin/session/create`)
+      .then((res) => {
+        dispatch({
+          type: 'SESSION_STARTED',
+          session: res.data
+        });
+      })
       .catch((err) => { console.log(err) });
   }
 }
