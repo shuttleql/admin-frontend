@@ -28,7 +28,7 @@ export function fetchUsers() {
 
     request
       .getInstance()
-      .get(`${config.GATEWAY_URL}/shared/users`)
+      .get(`${config.GATEWAY_URL}/admin/users`)
       .then((res) => {
         dispatch({
           type: 'USERS_FETCHED',

@@ -63,7 +63,6 @@ const usersReducer = (state = initialState, action) => {
     case 'USERS_FETCHED':
       return action.users.map(u => ({
         ...u,
-        checkedIn: false
       }));
     default:
       return state;
