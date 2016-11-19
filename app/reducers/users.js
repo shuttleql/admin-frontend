@@ -31,7 +31,7 @@ const usersReducer = (state = initialState, action) => {
       return state.filter(u => {
         return u.id != action.userId;
       });
-    case 'CHECK_IN_USER':
+    case 'USER_CHECKED_IN':
       return state.map(u => {
         if (u.id === action.id) {
           return {
@@ -42,7 +42,7 @@ const usersReducer = (state = initialState, action) => {
           return u;
         }
       });
-    case 'CHECK_OUT_USER':
+    case 'USER_CHECKED_OUT':
       return state.map(u => {
         if (u.id === action.id) {
           return {
@@ -63,7 +63,6 @@ const usersReducer = (state = initialState, action) => {
     case 'USERS_FETCHED':
       return action.users.map(u => ({
         ...u,
-        checkedIn: false
       }));
     default:
       return state;

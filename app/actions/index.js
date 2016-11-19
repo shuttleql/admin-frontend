@@ -1,7 +1,9 @@
 import * as types from './types';
 import config from '../config';
 import request from './request';
+import { stopSessionAsync } from './session';
 
+// stop match making, then stop session
 export function endSession() {
   return (dispatch) => {
     dispatch({
@@ -12,9 +14,11 @@ export function endSession() {
       .getInstance()
       .put(`${config.GATEWAY_URL}/admin/session/status/stop`)
       .then((res) => {
-        dispatch({
-          type: 'SESSION_ENDED'
-        });
+        dispatch(stopSessionAsync()).then(() => {
+          dispatch({
+            type: 'SESSION_ENDED'
+          });
+        })
       })
       .catch((err) => { console.log(err) });
   }
@@ -28,7 +32,7 @@ export function fetchUsers() {
 
     request
       .getInstance()
-      .get(`${config.GATEWAY_URL}/shared/users`)
+      .get(`${config.GATEWAY_URL}/admin/users`)
       .then((res) => {
         dispatch({
           type: 'USERS_FETCHED',

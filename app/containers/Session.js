@@ -7,14 +7,11 @@ import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {beginMatchmaking as startMatchmaking, endSession as finishSession, fetchMatches, fetchUsers} from '../actions';
+import {getCurrentSessionAsync, createSessionAsync, stopSessionAsync, checkInUserAsync, checkOutUserAsync} from '../actions/session';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import {orange500, blue500, red500, lightGreen500, pink500 } from 'material-ui/styles/colors';
-
-const paperStyle = {
-  margin: 20
-};
 
 const chipStyle = {
   margin: 4
@@ -42,6 +39,7 @@ class Session extends Component {
   }
 
   componentDidMount() {
+    this.props.fetchSession()
     this.props.fetchUsers()
     this.props.fetchMatches()
   }
@@ -217,24 +215,16 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     startSession: () => {
-      dispatch({
-        type: 'START_SESSION'
-      });
+      dispatch(createSessionAsync());
     },
     endSession: () => {
       dispatch(finishSession());
     },
     checkinUser: (user) => {
-      dispatch({
-        type: 'CHECK_IN_USER',
-        id: user.id
-      });
+      dispatch(checkInUserAsync(user.id));
     },
     checkoutUser: (id) => {
-      dispatch({
-        type: 'CHECK_OUT_USER',
-        id
-      });
+      dispatch(checkOutUserAsync(id));
     },
     beginMatchmaking: (users) => {
       dispatch(startMatchmaking(users));
@@ -244,6 +234,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     fetchUsers: () => {
       dispatch(fetchUsers());
+    },
+    fetchSession: () => {
+      dispatch(getCurrentSessionAsync());
     }
   };
 };
