@@ -20,12 +20,46 @@ export function createSessionAsync() {
   }
 }
 
-export function checkInUserAsync() {
+export function checkInUserAsync(id) {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHECK_IN_USER'
+    });
 
+    return request
+      .getInstance()
+      .post(`${config.GATEWAY_URL}/admin/session/checkin`, {
+        id
+      })
+      .then(() => {
+        dispatch({
+          type: 'USER_CHECKED_IN',
+          id
+        });
+      })
+      .catch((err) => { console.log(err) });
+  }
 }
 
-export function checkOutUserAsync() {
+export function checkOutUserAsync(id) {
+  return (dispatch) => {
+    dispatch({
+      type: 'CHECK_OUT_USER'
+    });
 
+    return request
+      .getInstance()
+      .put(`${config.GATEWAY_URL}/admin/session/checkout`, {
+        id
+      })
+      .then(() => {
+        dispatch({
+          type: 'USER_CHECKED_OUT',
+          id
+        });
+      })
+      .catch((err) => { console.log(err) });
+  }
 }
 
 export function stopSessionAsync() {
