@@ -6,10 +6,11 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import {beginMatchmaking as startMatchmaking, endSession as finishSession, fetchMatches, fetchUsers} from '../actions';
+import SvgIconFace from 'material-ui/svg-icons/action/face';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import {orange500, blue500, red500, lightGreen500, pink500 } from 'material-ui/styles/colors';
-import {beginMatchmaking as startMatchmaking, endSession as finishSession} from '../actions';
 
 const paperStyle = {
   margin: 20
@@ -38,6 +39,56 @@ class Session extends Component {
     super(props);
 
     this.state = {};
+  }
+
+  componentDidMount() {
+    this.props.fetchUsers()
+    this.props.fetchMatches()
+  }
+
+  renderCourt(game) {
+    const titleText = `${game.courtType} ${game.unfilled ? '(Unfilled)' : ''}`
+
+    switch (game.courtType) {
+      case 'Singles':
+        return (
+          <Card key={game.courtId} style={cardStyle}>
+            <CardTitle title={game.courtName} subtitle={titleText} />
+            <CardText>
+              {game.team1[0] && game.team1[0].name || '?'}
+              <br/>
+              <br/>
+            </CardText>
+            <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
+              vs
+            </CardText>
+            <CardText>
+              {game.team2[0] && game.team2[0].name || '?'}
+              <br/>
+              <br/>
+            </CardText>
+          </Card>
+        )
+      case 'Doubles':
+        return (
+          <Card key={game.courtId} style={cardStyle}>
+            <CardTitle title={game.courtName} subtitle={titleText} />
+            <CardText>
+              {game.team1[0] && game.team1[0].name || '?'}
+              <br/>
+              {game.team1[1] && game.team1[1].name || '?'}
+            </CardText>
+            <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
+              vs
+            </CardText>
+            <CardText>
+              {game.team2[0] && game.team2[0].name || '?'}
+              <br/>
+              {game.team2[1] && game.team2[1].name || '?'}
+            </CardText>
+          </Card>
+        )
+    }
   }
 
   render() {
@@ -95,45 +146,12 @@ class Session extends Component {
           { this.props.games.length ? (
             <div style={{ padding: 20, overflow: 'hidden' }}>
               <Subheader>Courts</Subheader>
-              {this.props.games.map(game => (
-                game.team1.length === 1 ? (
-                  <Card key={game.courtId} style={cardStyle}>
-                    <CardTitle title={game.courtName} subtitle={'Singles'} />
-                    <CardText>
-                      {game.team1[0].name}
-                      <br/>
-                      <br/>
-                    </CardText>
-                    <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
-                      vs
-                    </CardText>
-                    <CardText>
-                      {game.team2[0].name}
-                      <br/>
-                      <br/>
-                    </CardText>
-                  </Card>
-                ) : (
-                  <Card key={game.courtId} style={cardStyle}>
-                    <CardTitle title={game.courtName} subtitle={'Doubles'} />
-                    <CardText>
-                      {game.team1[0].name}
-                      <br/>
-                      {game.team1[1].name}
-                    </CardText>
-                    <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
-                      vs
-                    </CardText>
-                    <CardText>
-                      {game.team2[0].name}
-                      <br/>
-                      {game.team2[1].name}
-                    </CardText>
-                  </Card>
-                )
-              ))}
+              {this.props.games.map(game => this.renderCourt(game))}
             </div>
-          ) : (<p>Matchmaking has not started yet.</p>) }
+          ) : (<div style={{ padding: 20, overflow: 'hidden' }}>
+            <p>Matchmaking has not started yet.</p>
+            </div>
+          ) }
         </Tab>
       </Tabs>
     );
@@ -220,6 +238,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     beginMatchmaking: (users) => {
       dispatch(startMatchmaking(users));
+    },
+    fetchMatches: () => {
+      dispatch(fetchMatches());
+    },
+    fetchUsers: () => {
+      dispatch(fetchUsers());
     }
   };
 };

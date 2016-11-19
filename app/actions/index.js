@@ -62,6 +62,28 @@ export function registerUser(user) {
   }
 }
 
+export function fetchMatches() {
+  return (dispatch) => {
+    dispatch({
+      type: 'FETCH_MATCH_DATA'
+    });
+
+    request
+      .getInstance()
+      .get(`${config.GATEWAY_URL}/shared/game`)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch({
+            type: 'RECEIVE_MATCH_DATA',
+            games: res.data.matches,
+            queue: res.data.queue
+          });
+        }
+      })
+      .catch((err) => { console.log(err) });
+  }
+}
+
 export function editUser(user) {
   return (dispatch) => {
     request
@@ -115,23 +137,7 @@ export function beginMatchmaking(players) {
       })))
       .then((res) => {
         if (res.status === 200) {
-          dispatch({
-            type: 'FETCH_MATCH_DATA'
-          });
-
-          request
-            .getInstance()
-            .get(`${config.GATEWAY_URL}/shared/game`)
-            .then((res) => {
-              if (res.status === 200) {
-                dispatch({
-                  type: 'RECEIVE_MATCH_DATA',
-                  games: res.data.matches,
-                  queue: res.data.queue
-                });
-              }
-            })
-            .catch((err) => { console.log(err) });
+          dispatch(fetchMatches())
         }
       })
       .catch((err) => { console.log(err) });
