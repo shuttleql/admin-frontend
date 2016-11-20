@@ -16,10 +16,10 @@ class Announcement extends Component {
     super(props);
 
     this.state = {
+      showCreateDialog: false,
       createDialog: {
         error: false,
-        message: '',
-        show: false
+        message: ''
       }
     };
   }
@@ -54,7 +54,7 @@ class Announcement extends Component {
           title="Send new Announcement"
           actions={actions}
           modal={false}
-          open={this.state.createDialog.show}
+          open={this.state.showCreateDialog}
           onRequestClose={this.handleClose}
         >
           <TextField
@@ -110,19 +110,14 @@ class Announcement extends Component {
   }
 
   handleAnnouncementCreate = () => {
-    this.setState({
-      createDialog: {
-        ...this.state.createDialog,
-        show: true
-      }
-    });
+    this.setState({ showCreateDialog: true });
   };
 
   handleClose = () => {
     this.setState({
+      showCreateDialog: false,
       createDialog: {
         ...this.state.createDialog,
-        show: false,
         message: ''
       }
     });
