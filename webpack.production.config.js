@@ -29,7 +29,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'app/index.tpl.html',
             inject: 'body',
-            filename: 'index.html'
+            filename: 'index.html',
+            title: 'ShuttleQL Admin Panel',
+      			favicon: './logo.png'
         }),
         // extracts the css from the js files and puts them on a separate .css file. this is for
         // performance and is used in prod environments. Styles load faster on their own .css
