@@ -5,6 +5,7 @@ import {List, ListItem} from 'material-ui/List';
 import Drawer from 'material-ui/Drawer';
 import People from 'material-ui/svg-icons/social/people';
 import Schedule from 'material-ui/svg-icons/action/schedule';
+import Announcement from 'material-ui/svg-icons/action/announcement';
 import AppBar from 'material-ui/AppBar';
 
 class Dashboard extends Component {
@@ -27,6 +28,7 @@ class Dashboard extends Component {
           <List>
             <ListItem primaryText="Session" leftIcon={<Schedule />} onClick={this.onClickMenuItem.bind(this, '/dashboard/session')} />
             <ListItem primaryText="User Management" leftIcon={<People />} onClick={this.onClickMenuItem.bind(this, '/dashboard/user')} />
+            <ListItem primaryText="Announcement" leftIcon={<Announcement />} onClick={this.onClickMenuItem.bind(this, '/dashboard/announcement')} />
           </List>
         </Drawer>
         <AppBar
@@ -47,7 +49,7 @@ class Dashboard extends Component {
 
   onClickMenuItem = (url) => {
     browserHistory.push(url);
-    
+
     this.setState({
       open: false
     });
