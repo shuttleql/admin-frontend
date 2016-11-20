@@ -120,25 +120,27 @@ class Session extends Component {
           </div>
         </Tab>
         <Tab label="Matches">
-          { this.props.queue.length ? (
+          { this.props.games.length ? (
             <div style={{ padding: 20, width: 250, float: 'left' }}>
-              <List disabled={true}>
-                <Subheader>Queue</Subheader>
-                {
-                  this.props.queue.map(player => (
-                    <ListItem
-                      key={player.id}
-                      primaryText={player.name}
-                      leftAvatar={
-                        <Avatar backgroundColor={levelColors[player.level - 1]}>
-                          {player.level}
-                        </Avatar>
+              <Subheader>Queue</Subheader>
+                { this.props.queue.length ? (
+                    <List disabled={true}>
+                      {
+                        this.props.queue.map(player => (
+                          <ListItem
+                            key={player.id}
+                            primaryText={player.name}
+                            leftAvatar={
+                              <Avatar backgroundColor={levelColors[player.level - 1]}>
+                                {player.level}
+                              </Avatar>
+                            }
+                            secondaryText={player.preference === 'Singles' ? player.preference + ' preferred' : null}
+                          />
+                        ))
                       }
-                      secondaryText={player.preference === 'Singles' ? player.preference + ' preferred' : null}
-                    />
-                  ))
-                }
-              </List>
+                    </List>
+                ) : (<p>Queue is currently empty</p>) }
             </div>
           ) : null }
           { this.props.games.length ? (
@@ -146,8 +148,9 @@ class Session extends Component {
               <Subheader>Courts</Subheader>
               {this.props.games.map(game => this.renderCourt(game))}
             </div>
-          ) : (<div style={{ padding: 20, overflow: 'hidden' }}>
-            <p>Matchmaking has not started yet.</p>
+          ) : (
+            <div style={{ padding: 20, overflow: 'hidden' }}>
+              <p>Matchmaking has not started yet.</p>
             </div>
           ) }
         </Tab>
