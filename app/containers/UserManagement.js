@@ -10,7 +10,8 @@ import ContentCreate from 'material-ui/svg-icons/content/create';
 import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import UserRegistration from '../components/UserRegistration';
-import { registerUser, editUser, deleteUsers, fetchUsers } from '../actions';
+import { fetchUsers } from '../actions'
+import { registerUser, editUser, deleteUsers } from '../actions/user';
 
 const buttonStyle = {
   marginTop: 20,
