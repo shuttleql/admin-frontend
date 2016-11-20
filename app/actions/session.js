@@ -79,7 +79,7 @@ export function getCurrentSessionAsync() {
 
     return request
       .getInstance()
-      .get(`${config.GATEWAY_URL}/admin/session/current`)
+      .get(`${config.GATEWAY_URL}/shared/session/current`)
       .then((res) => {
         dispatch({
           type: 'FETCHED_CURRENT_SESSION',
