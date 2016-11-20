@@ -7,8 +7,10 @@ import People from 'material-ui/svg-icons/social/people';
 import Schedule from 'material-ui/svg-icons/action/schedule';
 import Announcement from 'material-ui/svg-icons/action/announcement';
 import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton';
 import {fetchMatches, fetchUsers} from '../actions';
 import {getCurrentSessionAsync} from '../actions/session';
+import tokenManager from '../tokenManager';
 import Config from '../config';
 
 const io = require('socket.io-client/socket.io');
@@ -62,11 +64,22 @@ class Dashboard extends Component {
         <AppBar
           title="ShuttleQL Administration"
           iconClassNameRight="muidocs-icon-navigation-expand-more"
+          iconElementRight={
+            <FlatButton
+              label="Logout"
+              onClick={this.onLogoutButtonClick}
+              />
+          }
           onLeftIconButtonTouchTap={this.onOpenMenu}
         />
         {this.props.children}
       </div>
     );
+  }
+
+  onLogoutButtonClick = (e) => {
+    tokenManager.clearToken();
+    browserHistory.push("/login");
   }
 
   onOpenMenu = (e) => {

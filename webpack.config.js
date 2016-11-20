@@ -21,7 +21,9 @@ module.exports = {
         new HtmlWebpackPlugin({
           template: 'app/index.tpl.html',
           inject: 'body',
-          filename: 'index.html'
+          filename: 'index.html',
+          title: 'ShuttleQL Admin Panel',
+    			favicon: './logo.png'
         }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
