@@ -7,6 +7,12 @@ import People from 'material-ui/svg-icons/social/people';
 import Schedule from 'material-ui/svg-icons/action/schedule';
 import Announcement from 'material-ui/svg-icons/action/announcement';
 import AppBar from 'material-ui/AppBar';
+import {fetchMatches, fetchUsers} from '../actions';
+import {getCurrentSessionAsync} from '../actions/session';
+import Config from '../config';
+
+const io = require('socket.io-client/socket.io');
+const socket = io(Config.PIGEON_SOCKET_URL, {jsonp: false});
 
 class Dashboard extends Component {
   constructor(props) {
@@ -15,6 +21,28 @@ class Dashboard extends Component {
     this.state = {
       open: false
     };
+  }
+
+  componentDidMount() {
+    socket.on('connect', () => {
+      console.log('Connected to Pigeon.')
+    });
+
+    socket.on('update', (data) => {
+      console.log('Stale data, resource: ', data);
+
+      switch (data.resource) {
+        case 'users':
+          this.props.fetchUsers();
+          break;
+        case 'session':
+          this.props.fetchSession();
+          break;
+        case 'matches':
+          this.props.fetchMatches();
+          break;
+      }
+    });
   }
 
   render() {
@@ -67,6 +95,15 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchMatches: () => {
+      dispatch(fetchMatches());
+    },
+    fetchUsers: () => {
+      dispatch(fetchUsers());
+    },
+    fetchSession: () => {
+      dispatch(getCurrentSessionAsync());
+    }
   };
 };
 
