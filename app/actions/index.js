@@ -89,3 +89,21 @@ export function beginMatchmaking(players) {
       .catch((err) => { console.log(err) });
   };
 }
+
+export function overrideMatch(playerId1, playerId2) {
+  return (dispatch) => {
+    request
+      .getInstance()
+      .put(`${config.GATEWAY_URL}/admin/game/override`, {
+        userId: playerId1,
+        userId2: playerId2
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          dispatch(fetchMatches())
+        }
+      })
+      .catch((err) => { console.log(err) });
+  };
+}
