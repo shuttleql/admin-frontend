@@ -104,11 +104,14 @@ class Session extends Component {
                   anchorEl={this.state.override[game.courtId] ? this.state.override[game.courtId].anchorEl : null}
                   anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
                   targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                  style={{ width: 200 }}
+                  style={{ width: 275 }}
                   onRequestClose={this.handleOverrideClose}
                 >
                   Replace
-                  <DropDownMenu value={this.state.overrideId1 ? this.state.overrideId1 : null} onChange={this.handleOverrideReplace}>
+                  <DropDownMenu value={this.state.overrideId1 ? this.state.overrideId1 : null}
+                    autoWidth={false}
+                    style={{ width: 200 }}
+                    onChange={this.handleOverrideReplace}>
                     {
                       _.concat(game.team1, game.team2).map(player => (
                         <MenuItem key={player.id} value={player.id} primaryText={player.name} />
@@ -116,7 +119,10 @@ class Session extends Component {
                     }
                   </DropDownMenu>
                   With
-                  <DropDownMenu value={this.state.overrideId2 ? this.state.overrideId2 : null} onChange={this.handleOverrideWith}>
+                  <DropDownMenu value={this.state.overrideId2 ? this.state.overrideId2 : null}
+                    autoWidth={false}
+                    style={{ width: 200 }}
+                    onChange={this.handleOverrideWith}>
                     {
                       gamePlayers.map(player => (
                         <MenuItem key={player.id} value={player.id} primaryText={player.firstName + ' ' + player.lastName} />
@@ -126,6 +132,7 @@ class Session extends Component {
                   <RaisedButton
                     label="Confirm"
                     primary={true}
+                    disabled={!this.state.overrideId1 || !this.state.overrideId2}
                     onTouchTap={this.handleOverrideConfirm}
                   />
                 </Popover>
