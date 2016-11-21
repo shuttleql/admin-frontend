@@ -9,9 +9,12 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import {beginMatchmaking as startMatchmaking, endSession as finishSession, fetchMatches, fetchUsers} from '../actions';
 import {getCurrentSessionAsync, createSessionAsync, stopSessionAsync, checkInUserAsync, checkOutUserAsync} from '../actions/session';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
+import ActionBuild from 'material-ui/svg-icons/action/build';
+import ActionQueryBuilder from 'material-ui/svg-icons/action/query-builder';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import {orange500, blue500, red500, lightGreen500, pink500 } from 'material-ui/styles/colors';
+import MatchTimer from '../components/MatchTimer'
 
 const chipStyle = {
   margin: 4
@@ -39,9 +42,9 @@ class Session extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchSession()
-    this.props.fetchUsers()
-    this.props.fetchMatches()
+    this.props.fetchSession();
+    this.props.fetchUsers();
+    this.props.fetchMatches();
   }
 
   renderCourt(game) {
@@ -90,9 +93,10 @@ class Session extends Component {
   }
 
   render() {
+    const timeLeft = this.props.timeLeft;
     return (
       <Tabs>
-        <Tab label="Setup">
+        <Tab icon={<ActionBuild />} label="Setup">
           <div style={{ padding: 20}}>
             <div style={{ display: 'block'}}>
               { this.props.session.started ? <RaisedButton
@@ -119,7 +123,8 @@ class Session extends Component {
             { this.props.session.started ? this.renderCheckedInUsers() : null }
           </div>
         </Tab>
-        <Tab label="Matches">
+        <Tab icon={<ActionQueryBuilder />}
+          label={<span>Matches {this.props.timeLeft ? <MatchTimer timeLeft={timeLeft} /> : null}</span>}>
           { this.props.games.length ? (
             <div style={{ padding: 20, width: 250, float: 'left' }}>
               <Subheader>Queue</Subheader>
@@ -210,8 +215,9 @@ const mapStateToProps = (state) => {
       prettyText: `${u.firstName} ${u.lastName}, ${u.level}`
     })),
     session: state.session,
-    games: state.games,
-    queue: state.queue
+    games: state.match.games,
+    queue: state.match.queue,
+    timeLeft: state.match.timeLeft
   };
 };
 

@@ -58,7 +58,8 @@ export function fetchMatches() {
           dispatch({
             type: 'RECEIVE_MATCH_DATA',
             games: res.data.matches,
-            queue: res.data.queue
+            queue: res.data.queue,
+            timeLeft: res.data.timeLeft
           });
         }
       })
