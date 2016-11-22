@@ -6,15 +6,20 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {beginMatchmaking as startMatchmaking, endSession as finishSession, fetchMatches, fetchUsers} from '../actions';
+import {beginMatchmaking as startMatchmaking, endSession as finishSession, fetchMatches, fetchUsers, overrideMatch} from '../actions';
 import {getCurrentSessionAsync, createSessionAsync, stopSessionAsync, checkInUserAsync, checkOutUserAsync} from '../actions/session';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
 import ActionBuild from 'material-ui/svg-icons/action/build';
 import ActionQueryBuilder from 'material-ui/svg-icons/action/query-builder';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
+import FlatButton from 'material-ui/FlatButton';
+import Popover from 'material-ui/Popover';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 import {orange500, blue500, red500, lightGreen500, pink500 } from 'material-ui/styles/colors';
-import MatchTimer from '../components/MatchTimer'
+import MatchTimer from '../components/MatchTimer';
+import _ from 'lodash';
 
 const chipStyle = {
   margin: 4
@@ -38,7 +43,9 @@ class Session extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      override: {}
+    };
   }
 
   componentDidMount() {
@@ -47,53 +54,110 @@ class Session extends Component {
     this.props.fetchMatches();
   }
 
-  renderCourt(game) {
-    const titleText = `${game.courtType} ${game.unfilled ? '(Unfilled)' : ''}`
+  handleOverrideTap = (e) => {
+    e.preventDefault();
 
-    switch (game.courtType) {
-      case 'Singles':
-        return (
-          <Card key={game.courtId} style={cardStyle}>
-            <CardTitle title={game.courtName} subtitle={titleText} />
-            <CardText>
-              {game.team1[0] && game.team1[0].name || '?'}
-              <br/>
-              <br/>
-            </CardText>
-            <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
-              vs
-            </CardText>
-            <CardText>
-              {game.team2[0] && game.team2[0].name || '?'}
-              <br/>
-              <br/>
-            </CardText>
-          </Card>
-        )
-      case 'Doubles':
-        return (
-          <Card key={game.courtId} style={cardStyle}>
-            <CardTitle title={game.courtName} subtitle={titleText} />
-            <CardText>
-              {game.team1[0] && game.team1[0].name || '?'}
-              <br/>
-              {game.team1[1] && game.team1[1].name || '?'}
-            </CardText>
-            <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
-              vs
-            </CardText>
-            <CardText>
-              {game.team2[0] && game.team2[0].name || '?'}
-              <br/>
-              {game.team2[1] && game.team2[1].name || '?'}
-            </CardText>
-          </Card>
-        )
-    }
+    const newState = this.state;
+    newState.override[e.target.id] = {
+      open: true,
+      anchorEl: e.currentTarget
+    };
+    this.setState(newState);
+  };
+
+  handleOverrideClose = () => {
+    const override = _.mapValues(this.state.override, (val) => { return { open: false }});
+    this.setState({
+      overrideId1: null,
+      overrideId2: null,
+      override
+    });
+  };
+
+  handleOverrideReplace = (event, index, value) => {
+    this.setState({ overrideId1: value });
+  };
+
+  handleOverrideWith = (event, index, value) => {
+    this.setState({ overrideId2: value });
+  };
+
+  handleOverrideConfirm = () => {
+    this.props.overrideMatch(this.state.overrideId1, this.state.overrideId2);
+    this.handleOverrideClose();
+  };
+
+  renderCourt(game) {
+    const titleText = `${game.courtType} ${game.unfilled ? '(Unfilled)' : ''}`;
+    const gamePlayers = _.reject(this.props.checkedInUsers, (user) => {
+      return user.id === this.state.overrideId1;
+    });
+    return (
+      <Card key={game.courtId} style={cardStyle}>
+        <CardTitle
+          title={
+            <div>
+              <span>{game.courtName}</span>
+              <FlatButton label={<span id={game.courtId}>Override</span>} secondary={true} style={{float: 'right'}} onTouchTap={this.handleOverrideTap} />
+                <Popover
+                  open={this.state.override[game.courtId] ? this.state.override[game.courtId].open : false }
+                  anchorEl={this.state.override[game.courtId] ? this.state.override[game.courtId].anchorEl : null}
+                  anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                  targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                  style={{ width: 275 }}
+                  onRequestClose={this.handleOverrideClose}
+                >
+                  Replace
+                  <DropDownMenu value={this.state.overrideId1 ? this.state.overrideId1 : null}
+                    autoWidth={false}
+                    style={{ width: 200 }}
+                    onChange={this.handleOverrideReplace}>
+                    {
+                      _.concat(game.team1, game.team2).map(player => (
+                        <MenuItem key={player.id} value={player.id} primaryText={player.name} />
+                      ))
+                    }
+                  </DropDownMenu>
+                  With
+                  <DropDownMenu value={this.state.overrideId2 ? this.state.overrideId2 : null}
+                    autoWidth={false}
+                    style={{ width: 200 }}
+                    onChange={this.handleOverrideWith}>
+                    {
+                      gamePlayers.map(player => (
+                        <MenuItem key={player.id} value={player.id} primaryText={player.firstName + ' ' + player.lastName} />
+                      ))
+                    }
+                  </DropDownMenu>
+                  <RaisedButton
+                    label="Confirm"
+                    primary={true}
+                    disabled={!this.state.overrideId1 || !this.state.overrideId2}
+                    onTouchTap={this.handleOverrideConfirm}
+                  />
+                </Popover>
+            </div>
+          }
+          subtitle={titleText}
+        />
+        <CardText>
+          {game.team1[0] && game.team1[0].name || '?'}
+          <br/>
+          {game.team1[1] && game.team1[1].name || '?'}
+        </CardText>
+        <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
+          vs
+        </CardText>
+        <CardText>
+          {game.team2[0] && game.team2[0].name || '?'}
+          <br/>
+          {game.team2[1] && game.team2[1].name || '?'}
+        </CardText>
+      </Card>
+    )
   }
 
   render() {
-    const timeLeft = this.props.timeLeft;
     return (
       <Tabs>
         <Tab icon={<ActionBuild />} label="Setup">
@@ -124,7 +188,7 @@ class Session extends Component {
           </div>
         </Tab>
         <Tab icon={<ActionQueryBuilder />}
-          label={<span>Matches {this.props.timeLeft ? <MatchTimer timeLeft={timeLeft} /> : null}</span>}>
+          label={<span>Matches {this.props.timeLeft ? <MatchTimer timeLeft={this.props.timeLeft} /> : null}</span>}>
           { this.props.games.length ? (
             <div style={{ padding: 20, width: 250, float: 'left' }}>
               <Subheader>Queue</Subheader>
@@ -237,6 +301,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     beginMatchmaking: (users) => {
       dispatch(startMatchmaking(users));
+    },
+    overrideMatch: (playerId1, playerId2) => {
+      dispatch(overrideMatch(playerId1, playerId2));
     },
     fetchMatches: () => {
       dispatch(fetchMatches());
