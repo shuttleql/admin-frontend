@@ -12,6 +12,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import UserRegistration from '../components/UserRegistration';
 import { fetchUsers } from '../actions'
 import { registerUser, editUser, deleteUsers } from '../actions/user';
+import _ from 'lodash';
 
 const buttonStyle = {
   marginTop: 20,
@@ -206,7 +207,7 @@ class UserManagement extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    users: state.users
+    users: _.sortBy(state.users, 'id')
   };
 };
 
