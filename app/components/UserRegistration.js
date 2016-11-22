@@ -25,14 +25,16 @@ class UserRegistration extends Component {
         gender: false,
         email: false,
         password: false,
-        level: false
+        level: false,
+        preference: false
       },
       email: props.user && props.user.email || '',
       password: '',
       firstName: props.user && props.user.firstName || '',
       lastName: props.user && props.user.lastName || '',
       gender: props.user && props.user.gender || 'Male',
-      level: props.user && props.user.level || 1
+      level: props.user && props.user.level || 1,
+      preference: props.user && props.user.preference || 'Doubles'
     };
   }
 
@@ -88,6 +90,14 @@ class UserRegistration extends Component {
           value={this.state.level}
           onChange={this.onLevelChange}
         />
+        <TextField
+          style={inputStyle}
+          errorText={this.state.errors.preference && 'Preference cannot be blank.'}
+          floatingLabelText="Preference"
+          hintText="e.g. Singles"
+          value={this.state.preference}
+          onChange={this.onPreferenceChange}
+        />
       </form>
     );
   }
@@ -96,7 +106,7 @@ class UserRegistration extends Component {
     const errors = {};
     let invalidated = false;
 
-    let fields = ['firstName', 'lastName', 'gender', 'email', 'level'];
+    let fields = ['firstName', 'lastName', 'gender', 'email', 'level', 'preference'];
     if (!this.props.user) {
       fields.push('password');
     }
@@ -185,6 +195,15 @@ class UserRegistration extends Component {
         level: false
       }),
       level: e.target.value
+    })
+  }
+
+  onPreferenceChange = (e) => {
+    this.setState({
+      errors: Object.assign({}, this.state.errors, {
+        preference: false
+      }),
+      preference: e.target.value
     })
   }
 }
