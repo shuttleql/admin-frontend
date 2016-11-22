@@ -295,13 +295,15 @@ class Session extends Component {
           <div style={chipsContainer}>
             {
               this.props.checkedInUsers.map(u => (
-                <Chip
-                  key={u.id}
+                <Chip key={u.id}
                   onRequestDelete={() => { this.props.checkoutUser(u.id) }}
+                  backgroundColor={this.colorForPlayer(u)}
                   style={chipStyle}
                 >
-                  <Avatar icon={<SvgIconFace />} />
-                  {`${u.firstName} ${u.lastName}, ${u.level}`}
+                  <Avatar backgroundColor={this.backgroundColorForPlayer(u)}>
+                    {u.level}
+                  </Avatar>
+                  {`${u.firstName} ${u.lastName}`}
                 </Chip>
               ))
             }
