@@ -33,8 +33,9 @@ const chipsContainer = {
 const cardStyle = {
   margin: 5,
   width: 300,
-  height: 270,
-  display: 'inline-block'
+  height: 310,
+  display: 'inline-block',
+  verticalAlign: 'top'
 };
 
 const levelColors = [orange500, blue500, red500, lightGreen500, pink500];
@@ -141,17 +142,41 @@ class Session extends Component {
           subtitle={titleText}
         />
         <CardText>
-          {game.team1[0] && game.team1[0].name || '?'}
-          <br/>
-          {game.team1[1] && game.team1[1].name || '?'}
-        </CardText>
-        <CardText style={{color: 'rgba(0, 0, 0, 0.541176)'}}>
-          vs
-        </CardText>
-        <CardText>
-          {game.team2[0] && game.team2[0].name || '?'}
-          <br/>
-          {game.team2[1] && game.team2[1].name || '?'}
+          <div style={{height: 80}}>
+          {
+            game.team1
+            .concat(Array(this.getTeamCount(game.courtType) - game.team1.length).fill().map((v, i) => ({
+              level: '?',
+              name: 'Available spot',
+              id: 'empty' + i
+            })))
+            .map((player) => (
+              <Chip style={chipStyle} key={player.id}>
+                <Avatar>{player.level}</Avatar>
+                {player.name}
+              </Chip>
+            ))
+          }
+          </div>
+          <div style={{marginLeft: 20, marginBottom: 10}}>
+            vs
+          </div>
+          <div style={{height: 80}}>
+          {
+            game.team2
+            .concat(Array(this.getTeamCount(game.courtType) - game.team2.length).fill().map((v, i) => ({
+              level: '?',
+              name: 'Available spot',
+              id: 'empty' + i
+            })))
+            .map((player) => (
+              <Chip style={chipStyle} key={player.id}>
+                <Avatar>{player.level}</Avatar>
+                {player.name}
+              </Chip>
+            ))
+          }
+          </div>
         </CardText>
       </Card>
     )
@@ -268,6 +293,16 @@ class Session extends Component {
     this.refs.autocomplete.setState({
       searchText: ''
     });
+  }
+
+  getTeamCount = (courtType) => {
+    if (courtType === 'Doubles') {
+      return 2;
+    } else if (courtType === 'Singles') {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }
 

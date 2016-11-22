@@ -63,7 +63,6 @@ class Dashboard extends Component {
         </Drawer>
         <AppBar
           title="ShuttleQL Administration"
-          iconClassNameRight="muidocs-icon-navigation-expand-more"
           iconElementRight={
             <FlatButton
               label="Logout"
