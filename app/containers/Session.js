@@ -15,9 +15,9 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import FlatButton from 'material-ui/FlatButton';
 import Popover from 'material-ui/Popover';
-import DropDownMenu from 'material-ui/DropDownMenu';
+import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import {orange500, blue500, red500, lightGreen500, pink500 } from 'material-ui/styles/colors';
+import {orange500, blue500, red500, lightGreen500, pink500, orange900, blue900, red900, lightGreen900, pink900} from 'material-ui/styles/colors';
 import MatchTimer from '../components/MatchTimer';
 import _ from 'lodash';
 
@@ -38,7 +38,18 @@ const cardStyle = {
   verticalAlign: 'top'
 };
 
-const levelColors = [orange500, blue500, red500, lightGreen500, pink500];
+const modalStyle = {
+  padding: 10,
+  width: 276
+};
+
+const levelColors = [
+  { main: orange500, background: orange900},
+  { main: blue500, background: blue900},
+  { main: red500, background: red900},
+  { main: lightGreen500, background: lightGreen900},
+  { main: pink500, background: pink900}
+];
 
 class Session extends Component {
   constructor(props) {
@@ -53,6 +64,14 @@ class Session extends Component {
     this.props.fetchSession();
     this.props.fetchUsers();
     this.props.fetchMatches();
+  }
+
+  colorForPlayer = (player) => {
+    return levelColors[player.level - 1] && levelColors[player.level - 1].main;
+  }
+
+  backgroundColorForPlayer = (player) => {
+    return levelColors[player.level - 1] && levelColors[player.level - 1].background;
   }
 
   handleOverrideTap = (e) => {
@@ -105,31 +124,31 @@ class Session extends Component {
                   anchorEl={this.state.override[game.courtId] ? this.state.override[game.courtId].anchorEl : null}
                   anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
                   targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                  style={{ width: 275 }}
+                  style={modalStyle}
                   onRequestClose={this.handleOverrideClose}
                 >
-                  Replace
-                  <DropDownMenu value={this.state.overrideId1 ? this.state.overrideId1 : null}
-                    autoWidth={false}
-                    style={{ width: 200 }}
-                    onChange={this.handleOverrideReplace}>
-                    {
-                      _.concat(game.team1, game.team2).map(player => (
-                        <MenuItem key={player.id} value={player.id} primaryText={player.name} />
-                      ))
-                    }
-                  </DropDownMenu>
-                  With
-                  <DropDownMenu value={this.state.overrideId2 ? this.state.overrideId2 : null}
-                    autoWidth={false}
-                    style={{ width: 200 }}
-                    onChange={this.handleOverrideWith}>
-                    {
-                      gamePlayers.map(player => (
-                        <MenuItem key={player.id} value={player.id} primaryText={player.firstName + ' ' + player.lastName} />
-                      ))
-                    }
-                  </DropDownMenu>
+                  <SelectField
+                    floatingLabelText="Replace"
+                    value={this.state.overrideId1 ? this.state.overrideId1 : null}
+                    onChange={this.handleOverrideReplace}
+                  >
+                  {
+                    _.concat(game.team1, game.team2).map(player => (
+                      <MenuItem key={player.id} value={player.id} primaryText={player.name} />
+                    ))
+                  }
+                  </SelectField>
+                  <SelectField
+                    floatingLabelText="With"
+                    value={this.state.overrideId2 ? this.state.overrideId2 : null}
+                    onChange={this.handleOverrideWith}
+                  >
+                  {
+                    gamePlayers.map(player => (
+                      <MenuItem key={player.id} value={player.id} primaryText={player.firstName + ' ' + player.lastName} />
+                    ))
+                  }
+                  </SelectField>
                   <RaisedButton
                     label="Confirm"
                     primary={true}
@@ -151,8 +170,10 @@ class Session extends Component {
               id: 'empty' + i
             })))
             .map((player) => (
-              <Chip style={chipStyle} key={player.id}>
-                <Avatar>{player.level}</Avatar>
+              <Chip key={player.id} backgroundColor={this.colorForPlayer(player)} style={chipStyle}>
+                <Avatar backgroundColor={this.backgroundColorForPlayer(player)}>
+                  {player.level}
+                </Avatar>
                 {player.name}
               </Chip>
             ))
@@ -170,8 +191,10 @@ class Session extends Component {
               id: 'empty' + i
             })))
             .map((player) => (
-              <Chip style={chipStyle} key={player.id}>
-                <Avatar>{player.level}</Avatar>
+              <Chip key={player.id} backgroundColor={this.colorForPlayer(player)} style={chipStyle}>
+                <Avatar backgroundColor={this.backgroundColorForPlayer(player)}>
+                  {player.level}
+                </Avatar>
                 {player.name}
               </Chip>
             ))
@@ -225,7 +248,7 @@ class Session extends Component {
                             key={player.id}
                             primaryText={player.name}
                             leftAvatar={
-                              <Avatar backgroundColor={levelColors[player.level - 1]}>
+                              <Avatar backgroundColor={levelColors[player.level - 1] && levelColors[player.level - 1].main}>
                                 {player.level}
                               </Avatar>
                             }
