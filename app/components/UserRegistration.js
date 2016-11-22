@@ -96,7 +96,10 @@ class UserRegistration extends Component {
     const errors = {};
     let invalidated = false;
 
-    const fields = ['firstName', 'lastName', 'gender', 'email', 'password', 'level'];
+    let fields = ['firstName', 'lastName', 'gender', 'email', 'level'];
+    if (!this.props.user) {
+      fields.push('password');
+    }
 
     for (let field of fields) {
       if (!this.state[field]) {
