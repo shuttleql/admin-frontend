@@ -5,7 +5,7 @@ class MatchTimer extends Component {
     super(props);
 
     this.state = {
-      timeLeft: props.timeLeft
+      timeLeft: (props.nextRotationTime - Date.now()) / 1000
     };
   }
 
@@ -23,10 +23,10 @@ class MatchTimer extends Component {
       clearInterval(this.state.rotationTimerId);
     }
     const rotationTimerId = setInterval(this.rotationTimeTick, 1000);
-    this.setState({ rotationTimerId });
-    this.state = {
-      timeLeft: nextProps.timeLeft
-    };
+    this.setState({
+      timeLeft: (nextProps.nextRotationTime - Date.now()) / 1000,
+      rotationTimerId
+    });
   }
 
   secondsToString = (seconds) => {
@@ -53,7 +53,7 @@ class MatchTimer extends Component {
 }
 
 MatchTimer.propTypes = {
-  timeLeft: PropTypes.number
+  nextRotationTime: PropTypes.number
 };
 
 export default MatchTimer;

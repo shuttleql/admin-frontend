@@ -59,7 +59,7 @@ export function fetchMatches() {
             type: 'RECEIVE_MATCH_DATA',
             games: res.data.matches,
             queue: res.data.queue,
-            timeLeft: res.data.timeLeft
+            nextRotationTime: res.data.nextRotationTime // can be undefined if matchmaking has not started
           });
         }
       })

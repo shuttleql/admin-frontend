@@ -1,7 +1,7 @@
 const initialState = {
   games: [],
   queue: [],
-  timeLeft: 0
+  nextRotationTime: null
 };
 
 const matchReducer = (state = initialState, action) => {
@@ -15,7 +15,7 @@ const matchReducer = (state = initialState, action) => {
           };
         }),
         queue: action.queue,
-        timeLeft: action.timeLeft
+        nextRotationTime: action.nextRotationTime
       };
     case 'END_SESSION':
       return initialState;

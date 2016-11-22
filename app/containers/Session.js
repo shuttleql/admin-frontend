@@ -188,7 +188,7 @@ class Session extends Component {
           </div>
         </Tab>
         <Tab icon={<ActionQueryBuilder />}
-          label={<span>Matches {this.props.timeLeft ? <MatchTimer timeLeft={this.props.timeLeft} /> : null}</span>}>
+          label={<span>Matches {this.props.nextRotationTime ? <MatchTimer nextRotationTime={this.props.nextRotationTime} /> : null}</span>}>
           { this.props.games.length ? (
             <div style={{ padding: 20, width: 250, float: 'left' }}>
               <Subheader>Queue</Subheader>
@@ -281,7 +281,7 @@ const mapStateToProps = (state) => {
     session: state.session,
     games: state.match.games,
     queue: state.match.queue,
-    timeLeft: state.match.timeLeft
+    nextRotationTime: state.match.nextRotationTime
   };
 };
 
